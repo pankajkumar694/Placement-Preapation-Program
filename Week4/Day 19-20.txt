@@ -1,0 +1,145 @@
+Check if the Binary tree is height-balanced or not
+    unordered_map<TreeNode*, int> mp;
+
+int height(TreeNode* root){
+	if(root==NULL)  return 0;
+	// calculating the max height of each node
+	return mp[root] = 1+ max(height(root->left), height(root->right));
+}
+
+bool isBalanced(TreeNode* root) {
+	int h = height(root);
+	// if we reach leaf node, we return true;
+	if(root==NULL)  return true;
+	// to check if height difference is greater than 1, return false
+	if(abs(mp[root->left]-mp[root->right])>1) return false;
+	// checking if both the left and right tree are balanced
+	return isBalanced(root->left) && isBalanced(root->right);
+}
+    LCA
+    class Solution {
+public:
+    TreeNode * dfsTraverse(TreeNode * root, TreeNode * p , TreeNode * q)
+{
+    if( root == p || root == q || root == NULL)
+        return root;
+    TreeNode * parent1 = dfsTraverse(root->left, p, q);
+    TreeNode * parent2 = dfsTraverse(root->right, p, q);
+    if( parent1 && parent2)
+        return root;
+    else
+        return parent1 ? parent1:parent2;
+}
+TreeNode * lowestCommonAncestor(TreeNode * root, TreeNode * p, TreeNode * q)
+{
+    return dfsTraverse(root, p, q);
+}
+};
+    Check if two trees are identical or not
+    bool solve(TreeNode* p, TreeNode* q)
+{
+    if(p==NULL && q!=NULL || q==NULL && p!=NULL)
+        return false;
+   
+    if(p==NULL && q==NULL)
+        return true;
+    
+    return (p->val ==q->val) && solve(p->left,q->left) && solve(p->right, q->right);
+}
+bool isSameTree(TreeNode* p, TreeNode* q) {
+    
+    if(p==NULL && q==NULL)
+        return true;
+    return solve(p,q);
+}
+};
+    	Zig Zag Traversal of Binary Tree
+      class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>>res;
+        if(!root)   return res;
+        vector<int>row;
+        queue<TreeNode*>q;
+        int x=0;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                TreeNode*root=q.front();
+                q.pop();
+                row.push_back(root->val);
+                if(root->left!=NULL)
+                    q.push(root->left);
+                if(root->right!=NULL)
+                    q.push(root->right);
+            }
+            if(x%2==0)
+                res.push_back(row);
+            else
+            {
+                reverse(row.begin(),row.end());
+                res.push_back(row);
+            }
+            row.clear();
+            x+=1;
+        }
+        return res;
+    }
+};
+      Boundary Traversal of Binary Tree
+      Maximum path sum
+      class Solution {
+public:
+    int maxPathSum(TreeNode* root) {
+        
+        if(!root)
+            return 0;
+        int *ans=new int();
+        *ans=root->val;
+        path_sum(root, ans);
+        return *ans;
+    }
+    
+    
+    int path_sum(TreeNode* root, int *ans){
+        if(!root)
+            return 0;
+        
+        int path_sum_l=path_sum(root->left, ans);
+        int path_sum_r=path_sum(root->right, ans);
+        
+        int curr_ans=root->val+path_sum_l+path_sum_r;
+        int path_sum_root=max(path_sum_l, path_sum_r)+root->val;
+        
+        *ans=max(max(max(*ans, root->val),curr_ans), path_sum_root);
+        
+    return max(path_sum_root, root->val);
+        
+        
+    }
+};
+
+      Symmetric Binary Tree
+      class Solution {
+public:
+    bool helper(TreeNode* l,TreeNode* R){
+        if(!l && !R){
+            return true;
+        }
+        if(!l || !R){
+            return false;
+        }
+        if(l->val!=R->val){
+            return false;
+        }
+        return helper(l->left,R->right)&&helper(l->right,R->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        return helper(root->left,root->right);
+    }
+};
+      Check for Children Sum Property
+      
